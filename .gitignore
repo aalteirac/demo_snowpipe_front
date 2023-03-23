@@ -7,3 +7,5 @@
 /.env
 /*.csv
 *.map
+*.pem
+default.json

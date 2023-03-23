@@ -1,179 +1,119 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
-	<!-- Head -->
+
 	<head>
 		<title>Snowpipe Raspberry Demo</title>
-		<!-- Web Fonts -->
 		<link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
-
-		<!-- Components Vendor Styles -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 		<link rel="stylesheet" href="assets/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
-
-		<!-- Theme Styles -->
 		<link rel="stylesheet" href="assets/css/theme.css">
 	</head>
-	<!-- End Head -->
-
-	<!-- Body -->
 	<body>
-		<!-- Header (Topbar) -->
 		<header class="u-header">
-			<!-- Header Left Section -->
 			<div class="u-header-left">
-				<!-- Header Logo -->
 				<a class="u-header-logo" href="index.html">
 					<img class="u-header-logo__icon" src="assets/img/M.png" alt="Awesome Icon">
 				</a>
-				<!-- End Header Logo -->
 			</div>
-			<!-- End Header Left Section -->
 
-			<!-- Header Middle Section -->
 			<div class="u-header-middle">
-				<!-- Sidebar Invoker -->
 				<div class="u-header-section">
 					<a class="js-sidebar-invoker u-header-invoker u-sidebar-invoker" href="#"
 					   data-is-close-all-except-this="true"
 					   data-target="#sidebar">
-						<span class="ti-align-left u-header-invoker__icon u-sidebar-invoker__icon--open"></span>
-						<span class="ti-align-justify u-header-invoker__icon u-sidebar-invoker__icon--close"></span>
+						<span class="fa fa-align-justify u-header-invoker__icon u-sidebar-invoker__icon--open"></span>
+						<span class="fa fa-align-justify u-header-invoker__icon u-sidebar-invoker__icon--close"></span>
 					</a>
 				</div>
-				<!-- End Sidebar Invoker -->
-
-				<!-- Header Search -->
 				<div class="u-header-section justify-content-sm-start flex-grow-1 py-0">
 					<div class="u-header-search"
 					     data-search-mobile-invoker="#headerSearchMobileInvoker"
 					     data-search-target="#headerSearch">
-						<!-- Header Search Invoker (Mobile Mode) -->
 						<a id="headerSearchMobileInvoker" class="u-header-search__mobile-invoker align-items-center" href="#">
 							<span class="ti-search"></span>
 						</a>
-						<!-- End Header Search Invoker (Mobile Mode) -->
 
-						<!-- Header Search Form -->
 						<div id="headerSearch" class="u-header-search-form">
 							<form action="/" class="w-100">
 								<div class="input-group h-100">
 									<button class="btn-link input-group-prepend u-header-search__btn" type="submit">
-										<span class="ti-search"></span>
+										<span class="fa fa-search"></span>
 									</button>
 									<input class="form-control u-header-search__field" type="search" placeholder="Type to search…">
 								</div>
 							</form>
 						</div>
-						<!-- End Header Search Form -->
 					</div>
 				</div>
-				<!-- End Header Search -->
-
 			</div>
-			<!-- End Header Middle Section -->
 		</header>
-		<!-- End Header (Topbar) -->
 
-		<!-- Main -->
 		<main class="u-main">
-			<!-- Sidebar -->
+
 			<aside id="sidebar" class="u-sidebar">
 				<div class="u-sidebar-inner">
-					<!-- Sidebar Header -->
 					<header class="u-sidebar-header">
-						<!-- Sidebar Logo -->
 						<a class="u-sidebar-logo" href="index.html">
-							<!-- <img class="u-sidebar-logo__icon" src="assets/svg/logo-mini.svg" alt="Awesome Icon">
-							<img class="u-sidebar-logo__text" src="assets/svg/logo-text-light.svg" alt="Awesome"> -->
 						</a>
-						<!-- End Sidebar Logo -->
 					</header>
-					<!-- End Sidebar Header -->
-
-					<!-- Sidebar Nav -->
 					<nav class="u-sidebar-nav">
-						<!-- Sidebar Nav Menu -->
 						<ul class="u-sidebar-nav-menu u-sidebar-nav-menu--top-level">
-							<!-- Dashboard -->
 							<li class="u-sidebar-nav-menu__item">
 								<a class="u-sidebar-nav-menu__link active" href="index.html">
-									<span class="ti-dashboard u-sidebar-nav-menu__item-icon"></span>
+									<span class="fa fa-chart-line u-sidebar-nav-menu__item-icon"></span>
 									<span class="u-sidebar-nav-menu__item-title">Dashboard</span>
 								</a>
 							</li>
-							<!-- End Dashboard -->
 
-							<!-- UI Base -->
 							<li class="u-sidebar-nav-menu__item">
 								<a class="u-sidebar-nav-menu__link" href="#"
 								   data-target="#menuItemUIBase">
-									<span class="ti-settings u-sidebar-nav-menu__item-icon"></span>
+									<span class="fa fa-gear u-sidebar-nav-menu__item-icon"></span>
 									<span class="u-sidebar-nav-menu__item-title">Next TBD</span>
-									<span class="ti-angle-down u-sidebar-nav-menu__item-arrow"></span>
+									<span class="fa fa-chevron-up u-sidebar-nav-menu__item-arrow"></span>
 								</a>
 
 								<ul id="menuItemUIBase" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level" style="display: none;">
-									<!-- Colors -->
 									<li class="u-sidebar-nav-menu__item">
 										<a class="u-sidebar-nav-menu__link" href="index.html">
 											<span class="u-sidebar-nav-menu__item-icon"></span>
 											<span class="u-sidebar-nav-menu__item-title">Others...</span>
 										</a>
 									</li>
-									<!-- End Colors -->
 								</ul>
 							</li>
-							<!-- End UI Base -->
-
 
 							<li class="u-sidebar-nav-menu__divider"></li>
 
-							<!-- Documentation -->
 							<li class="u-sidebar-nav-menu__item">
 								<a class="u-sidebar-nav-menu__link" href="" target="_blank">
 									<span class="ti-files u-sidebar-nav-menu__item-icon"></span>
 									<span class="u-sidebar-nav-menu__item-title">Documentation</span>
 								</a>
 							</li>
-							<!-- End Documentation -->
 
-							<!-- Free Download -->
 							<li class="u-sidebar-nav-menu__item">
 								<a class="u-sidebar-nav-menu__link" href="" target="_blank">
 									<span class="ti-save u-sidebar-nav-menu__item-icon"></span>
 									<span class="u-sidebar-nav-menu__item-title">Download Docker</span>
 								</a>
 							</li>
-							<!-- End Free Download -->
 						</ul>
-						<!-- End Sidebar Nav Menu -->
 					</nav>
-					<!-- End Sidebar Nav -->
 				</div>
 			</aside>
-			<!-- End Sidebar -->
 
-			<!-- Content -->
 			<div class="u-content">
-				<!-- Content Body -->
 				<div class="u-body">
-					<!-- Doughnut Chart -->
 					<div class="row">
 						<div class="col-md-3 mb-5">
-							<!-- Card -->
 							<div class="card">
-								<!-- Card Body -->
 								<div class="card-body">
-									<!-- Chart with Info -->
 									<div class="media align-items-center py-2">
-										<!-- Chart with Info - Info -->
 										<div class="media-body">
-											<h5 class="h5 text-muted mb-2">Total Row Ingested</h5>
+											<h5 class="h5 text-muted mb-2">Total Ingested Rows</h5>
 											<span class="h2 font-weight-normal mb-0">254733</span>
 										</div>
-										<!-- End Chart with Info - Info -->
-
-										<!-- Chart with Info - Chart -->
 										<div class="text-right ml-2" style="max-width: 70px;">
 											<div class="mb-2">
 												<canvas class="js-area-chart-small"
@@ -181,35 +121,26 @@
 												        height="20"
 												        data-extend='[{
 																	"data": [20, 0, 40, 40, 100, 60, 100, 90, 80],
-                                  "borderColor": "#444bf8"
-																}]'></canvas>
+                                 									 "borderColor": "#444bf8"
+																}]'>
+												</canvas>
 											</div>
-
 											<span class="text-success">
 												+5.2%
 												<span class="ti-arrow-up"></span>
 											</span>
 										</div>
-										<!-- End Chart with Info - Chart -->
 									</div>
-									<!-- End Chart with Info -->
 								</div>
-								<!-- End Card Body -->
 							</div>
-							<!-- End Card -->
 						</div>
 					</div>
-					<!-- End Doughnut Chart -->
 
 					<div class="row">
 						<div class="col-md-12 mb-5">
-							<!-- Revenue Chart -->
 							<div class="card h-100">
-								<!-- Card Header -->
 								<header class="card-header d-flex align-items-center justify-content-between">
 									<h2 class="h4 card-header-title">Revenue</h2>
-
-									<!-- Card Icons -->
 									<ul class="list-inline mb-0">
 										<li class="list-inline-item dropdown">
 											<a id="revenueMenuInvoker" class="u-icon-sm link-muted" href="#" role="button" aria-haspopup="true" aria-expanded="false"
@@ -217,8 +148,6 @@
 											   data-offset="8">
 												<span class="ti-more"></span>
 											</a>
-
-											<!-- Card Menu -->
 											<div class="dropdown-menu dropdown-menu-right" aria-labelledby="revenueMenuInvoker" style="width: 150px;">
 												<div class="card border-0 p-3">
 													<ul class="list-unstyled mb-0">
@@ -228,16 +157,10 @@
 													</ul>
 												</div>
 											</div>
-											<!-- Card Menu -->
 										</li>
 									</ul>
-									<!-- End Card Icons -->
 								</header>
-								<!-- End Card Header -->
-
-								<!-- Card Body -->
 								<div class="card-body pt-0">
-									<!-- Chart Legends -->
 									<ul class="list-inline mb-4">
 										<li class="list-inline-item d-inline-flex align-items-center mr-4">
 											<span class="u-indicator u-indicator-xxs position-static bg-primary border-0 mr-2"></span>
@@ -248,27 +171,17 @@
 											Profit
 										</li>
 									</ul>
-									<!-- End Chart Legends -->
-
-									<!-- Chart -->
 									<div class="mx-n3" style="height: 340px;">
 										<canvas class="js-area-chart"
 										        width="100"
 										        height="320"></canvas>
 									</div>
-									<!-- End Chart -->
 								</div>
-								<!-- End Card Body -->
 							</div>
-							<!-- End Revenue Chart -->
 						</div>
 					</div>
 				</div>
-				<!-- End Content Body -->
-
-				<!-- Footer -->
 				<footer class="u-footer d-md-flex align-items-md-center text-center text-md-left text-muted">
-					<!-- Footer Menu -->
 					<ul class="list-inline mb-3 mb-md-0">
 						<li class="list-inline-item mr-4">
 							<a class="text-muted" href="" target="_blank"></a>
@@ -277,35 +190,25 @@
 							<a class="text-muted" href="" target="_blank"></a>
 						</li>
 					</ul>
-					<!-- End Footer Menu -->
-
-					<!-- Copyright -->
 					<span class="text-muted ml-auto">&copy; 2023 <a class="text-muted" href="" target="_blank">Anthony Alteirac</a>. All Free :-)</span>
-					<!-- End Copyright -->
 				</footer>
-				<!-- End Footer -->
 			</div>
-			<!-- End Content -->
 		</main>
-		<!-- End Main -->
 
-		<!-- Global Vendor -->
 		<script src="assets/vendor/jquery/dist/jquery.min.js"></script>
 		<script src="assets/vendor/jquery-migrate/jquery-migrate.min.js"></script>
 		<script src="assets/vendor/popper.js/dist/umd/popper.min.js"></script>
 		<script src="assets/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 
-		<!-- Plugins -->
 		<script src="assets/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
 		<script src="assets/vendor/chart.js/dist/Chart.min.js"></script>
 		<script src="assets/vendor/chartjs-plugin-style/dist/chartjs-plugin-style.min.js"></script>
 
-		<!-- Initialization  -->
 		<script src="assets/js/sidebar-nav.js"></script>
 		<script src="assets/js/main.js"></script>
 
 		<script src="assets/js/charts/area-chart.js"></script>
 		<script src="assets/js/charts/area-chart-small.js"></script>
 	</body>
-	<!-- End Body -->
+
 </html>
