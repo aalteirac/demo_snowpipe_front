@@ -28,14 +28,16 @@
   function openEffect(target, closedItems) {
     var windowWidth = window.innerWidth;
 
-    $(target).removeClass('mini action toggled');
     $body.removeClass('side-nav-on-action');
-
+    setTimeout(() => {
+      $(target).removeClass('mini action toggled');
+    }, 200);
+   
     if (closedItems.length > 0 && windowWidth >= 768) {
       setTimeout(function () {
         $(closedItems.toString()).parent().addClass('u-sidebar-nav--opened');
         $('body:not(.sidebar-tablet-closed) ' + closedItems.toString()).slideDown(400);
-      }, 300);
+      }, 10);
     }
   }
 

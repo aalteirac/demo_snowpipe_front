@@ -11,8 +11,9 @@
 	<body>
 		<header class="u-header">
 			<div class="u-header-left">
-				<a class="u-header-logo" href="index.html">
+				<a class="u-header-logo h3" href="index.html">
 					<img class="u-header-logo__icon" src="assets/img/M.png" alt="Awesome Icon">
+					<span class="u-header-logo__text">Snowpipe</span>
 				</a>
 			</div>
 
@@ -44,6 +45,9 @@
 							</form>
 						</div>
 					</div>
+					<div id="loader" class="spinner-border text-secondary mb-0 mr-2 mr-md-4" role="status">
+						<span class="sr-only">Loading...</span>
+					  </div>
 				</div>
 			</div>
 		</header>
@@ -87,15 +91,15 @@
 
 							<li class="u-sidebar-nav-menu__item">
 								<a class="u-sidebar-nav-menu__link" href="" target="_blank">
-									<span class="ti-files u-sidebar-nav-menu__item-icon"></span>
+									<span class="fa fa-file-lines u-sidebar-nav-menu__item-icon"></span>
 									<span class="u-sidebar-nav-menu__item-title">Documentation</span>
 								</a>
 							</li>
 
 							<li class="u-sidebar-nav-menu__item">
 								<a class="u-sidebar-nav-menu__link" href="" target="_blank">
-									<span class="ti-save u-sidebar-nav-menu__item-icon"></span>
-									<span class="u-sidebar-nav-menu__item-title">Download Docker</span>
+									<span class="fa-brands fa-docker u-sidebar-nav-menu__item-icon"></span>
+									<span class="u-sidebar-nav-menu__item-title">Docker Images</span>
 								</a>
 							</li>
 						</ul>
@@ -107,30 +111,27 @@
 				<div class="u-body">
 					<div class="row">
 						<div class="col-md-3 mb-5">
-							<div class="card">
+							<div class="card h-100">
 								<div class="card-body">
 									<div class="media align-items-center py-2">
 										<div class="media-body">
 											<h5 class="h5 text-muted mb-2">Total Ingested Rows</h5>
-											<span class="h2 font-weight-normal mb-0">254733</span>
-										</div>
-										<div class="text-right ml-2" style="max-width: 70px;">
-											<div class="mb-2">
-												<canvas class="js-area-chart-small"
-												        width="100"
-												        height="20"
-												        data-extend='[{
-																	"data": [20, 0, 40, 40, 100, 60, 100, 90, 80],
-                                 									 "borderColor": "#444bf8"
-																}]'>
-												</canvas>
-											</div>
-											<span class="text-success">
-												+5.2%
-												<span class="ti-arrow-up"></span>
-											</span>
+											<span class="h2 font-weight-normal mb-0" id="rawcount">--</span>
 										</div>
 									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 mb-5">
+							<div class="card h-100">
+								<header class="card-header">
+									<h2 class="h4 card-header-title">Refresh Rate <span id="rangeval">30</span>sec</h2>
+								</header>
+								<div class="card-body">
+									<!-- <label for="customRange1">Select rate in Seconds</label> -->
+									<input type="range" class="custom-range" min="3" max="60" value="30" id="refresh_rate" onInput="$('#rangeval').html($(this).val())">
+
+									<!-- <hr class="my-4"> -->
 								</div>
 							</div>
 						</div>
@@ -171,7 +172,7 @@
 											Profit
 										</li>
 									</ul>
-									<div class="mx-n3" style="height: 340px;">
+									<div class="mx-n3" style="height: 50vh;">
 										<canvas class="js-area-chart"
 										        width="100"
 										        height="320"></canvas>
@@ -190,7 +191,7 @@
 							<a class="text-muted" href="" target="_blank"></a>
 						</li>
 					</ul>
-					<span class="text-muted ml-auto">&copy; 2023 <a class="text-muted" href="" target="_blank">Anthony Alteirac</a>. All Free :-)</span>
+					<span class="text-muted ml-auto h6">Issues: <a class="text-muted" href="https://github.com/aalteirac/demo_snowpipe_front" target="_blank">git_anthony_alteirac</a></span>
 				</footer>
 			</div>
 		</main>

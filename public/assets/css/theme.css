@@ -15045,7 +15045,7 @@ body.side-nav-on-action .u-content {
       align-items: center;
   -ms-flex-pack: center;
       justify-content: center;
-  background-color: #252631;
+  background-color: #656565;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   padding-left: .5rem;
   padding-right: .5rem;
@@ -15638,7 +15638,7 @@ body.mobile-mode.side-nav-on-action .u-sidebar::before {
   z-index: 4;
   width: 15rem;
   min-height: 100vh;
-  background-color: #252631;
+  background-color: #656565;
   padding: 0 .5rem .94rem;
   transition: left .2s ease-in;
 }
