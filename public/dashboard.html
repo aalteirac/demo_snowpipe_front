@@ -1,0 +1,103 @@
+
+    <div class="row">
+        <div class="col-md-2 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h4 mb-2">Ingested Rows</h2>
+                    <span class="h1 h-100 kpi font-weight-normal mb-0" id="rawcount">--</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h4 mb-2">Speed</h2>
+                    <canvas id="gKM"></canvas>
+                    <span id="gauge-valueKM"></span><span>KM/H</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h4 mb-2">Cadence</h2>
+                    <canvas id="gCD"></canvas>
+                    <span id="gauge-valueCD"></span><span>RPM</span>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col-md-3 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-5">
+            <div class="card h-100">
+                <header class="card-header d-flex align-items-center justify-content-between">
+                    <h2 class="h4 card-header-title">Capacity</h2>
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item dropdown">
+                            <a id="revenueMenuInvoker" class="u-icon-sm link-muted" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+                               data-toggle="dropdown"
+                               data-offset="8">
+                                <span class="ti-more"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="revenueMenuInvoker" style="width: 150px;">
+                                <div class="card border-0 p-3">
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="mb-1">
+                                            <a class="d-block link-dark" href="#">Refresh</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </header>
+                <div class="card-body pt-0">
+                    <ul class="list-inline mb-4">
+                        <li class="list-inline-item d-inline-flex align-items-center mr-4">
+                            <span class="u-indicator u-indicator-xxs position-static bg-primary border-0 mr-2"></span>
+                            Cadence
+                        </li>
+                        <li class="list-inline-item d-inline-flex align-items-center mr-4">
+                            <span class="u-indicator u-indicator-xxs position-static bg-success border-0 mr-2"></span>
+                            Speed
+                        </li>
+                    </ul>
+                    <div class="mx-n3" style="height: 30vh;">
+                        <canvas class="js-area-chart"
+                                width="100"
+                                height="320"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-5">
+            <div class="card h-100">
+                <header class="card-header">
+                    <div class="outline-0 pop-refresh" tabindex="0" data-toggle="popover">
+                        <h2 class="h4 card-header-title">Refresh Rate <span id="rangeval">30</span>sec</h2>
+                        <div id="loader" class="spinner-border text-secondary" role="status" style="display: none;">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </header>
+                <div class="card-body">
+                    <!-- <label for="customRange1">Select rate in Seconds</label> -->
+                    <input type="range" class="custom-range" min="3" max="60" value="30" id="refresh_rate">
+
+                    <!-- <hr class="my-4"> -->
+                </div>
+            </div>
+        </div>
+    </div>    
+<script src="assets/js/dashboard.js"></script>

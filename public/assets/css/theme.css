@@ -60,6 +60,19 @@
   box-sizing: border-box;
 }
 
+.kpi{
+  display: block;
+  text-align: center;
+  margin-top: 4rem;
+}
+
+#loader {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+
 html {
   font-family: sans-serif;
   line-height: 1.15;
@@ -7811,7 +7824,7 @@ a.close.disabled {
   left: 0;
   z-index: 1060;
   display: block;
-  max-width: 276px;
+  max-width: 400px;
   font-family: "Roboto", sans-serif;
   font-style: normal;
   font-weight: 400;
@@ -7830,7 +7843,7 @@ a.close.disabled {
   word-wrap: break-word;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.125rem 1.25rem 0 rgba(153, 155, 168, 0.92);
   border-radius: 0.3rem;
 }
 
@@ -7910,7 +7923,7 @@ a.close.disabled {
 .bs-popover-bottom > .arrow::after, .bs-popover-auto[x-placement^="bottom"] > .arrow::after {
   top: 1px;
   border-width: 0 0.5rem 0.5rem 0.5rem;
-  border-bottom-color: #fff;
+  border-bottom-color:  #95ffc2;
 }
 
 .bs-popover-bottom .popover-header::before, .bs-popover-auto[x-placement^="bottom"] .popover-header::before {
@@ -7921,7 +7934,7 @@ a.close.disabled {
   width: 1rem;
   margin-left: -0.5rem;
   content: "";
-  border-bottom: 1px solid #f7f7f7;
+  /* border-bottom: 1px solid #f7f7f7; */
 }
 
 .bs-popover-left, .bs-popover-auto[x-placement^="left"] {
@@ -7951,7 +7964,8 @@ a.close.disabled {
   padding: 0.5rem 0.75rem;
   margin-bottom: 0;
   font-size: 1rem;
-  background-color: #f7f7f7;
+  background-color: #95ffc2;
+  color: darkgreen;
   border-bottom: 1px solid #ebebeb;
   border-top-left-radius: calc(0.3rem - 1px);
   border-top-right-radius: calc(0.3rem - 1px);
