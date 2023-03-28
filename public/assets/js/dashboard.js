@@ -7,10 +7,10 @@
     var chart; 
     var gaugeKM;
     var gaugeCD;
-    var reset_check_KM;
-    var reset_check_CD;
+    var lastevent;
     var lastSpeed=0;
     var lastCadence=0;
+    var inMotion=false;
 
     function drawGaugeDS(){
     
@@ -67,7 +67,7 @@
         gaugeKM= new Gauge(target).setOptions(opts); // create sexy gauge!
         gaugeKM.maxValue = 50; // set max gauge value
         gaugeKM.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-        gaugeKM.animationSpeed = 140; // set animation speed (32 is default value)
+        gaugeKM.animationSpeed = 90; // set animation speed (32 is default value)
         gaugeKM.setTextField(document.getElementById('gauge-valueKM'),1);
         gaugeKM.set(0); // set actual value
     }  
@@ -288,26 +288,31 @@
 
     function initSocket(){
         const socket = io("http://10.0.0.11:4321");
+        socket.on('connect_error',e=>console.log('Ant feeder Docker container is either not reachable, faulty or simply not started :-)'))
         socket.on('data', data => {
             if(typeof(data.speed)!='undefined'){
-                let sp=parseFloat(data.speed.toFixed(2));
-                gaugeKM.set(sp);
-                lastSpeed=sp;
-                clearTimeout(reset_check_KM)
-                reset_check_KM=setTimeout(() => {
+                inMotion=data.move
+                if(inMotion==true){
+                    let sp=parseFloat(data.speed.toFixed(2));
+                    gaugeKM.set(sp);
+                    lastSpeed=sp;
+                }else{
                     gaugeKM.set(0);
-                }, 800);
+                    lastSpeed=0;
+                }
             }
             if(typeof(data.cadence)!='undefined'){
                 let cad=parseFloat(data.cadence.toFixed(2))
                 gaugeCD.set(cad)
                 lastCadence=cad
-                clearTimeout(reset_check_CD)
-                reset_check_CD=setTimeout(() => {
+                if(lastevent==data.lastevent){
                     gaugeCD.set(0);
-                }, 1200);
+                    lastCadence=0
+                }
+                lastevent=data.lastevent;
             }
-            addToChart(convertTimeStamp(data.ts),lastSpeed,lastCadence)
+            if(inMotion)
+                addToChart(convertTimeStamp(data.ts),lastSpeed,lastCadence)
           })
     }
     async function init(){
