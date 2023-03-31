@@ -77,7 +77,7 @@ async function getRawValues(){
             console.log(e)
           });
     var statement =connection.execute({
-      sqlText: `select * from snowpipe_streaming.dev.fromsdk order by TS desc limit 10;`,
+      sqlText: `select * from snowpipe_streaming.dev.fromsdk where TS> dateadd(minute,-5,current_timestamp()) order by TS desc;`,
       complete: function(err, stmt, rows) {
         if (err) {
           console.error('Failed to execute statement due to the following error: ' + err.message);

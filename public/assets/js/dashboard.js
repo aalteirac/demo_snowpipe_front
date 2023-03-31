@@ -4,7 +4,8 @@
     var saverRef=0;
     var saverPrevious=0;
     var saver;
-    var chart; 
+    var chartSnow; 
+    var chartLive; 
     var gaugeKM;
     var gaugeCD;
     var lastevent;
@@ -18,49 +19,64 @@
 
     function drawGaugeCD(){
         var opts = {
-            angle: -0.33, // The span of the gauge arc
-            lineWidth: 0.24, // The line thickness
-            radiusScale: 1, // Relative radius
+            angle: -0.33, 
+            lineWidth: 0.24, 
+            radiusScale: 1, 
             pointer: {
-                length: 0.6, // // Relative to gauge radius
-                strokeWidth: 0.035, // The thickness
-                color: '#000000' // Fill color
+                length: 0.6, 
+                strokeWidth: 0.035, 
+                color: '#000000' 
             },
-            limitMax: false,     // If false, max value increases automatically if value > maxValue
-            limitMin: true,     // If true, the min value of the gauge will be fixed
-            colorStart: '#6FADCF',   // Colors
-            colorStop: '#8FC0DA',    // just experiment with them
-            strokeColor: '#E0E0E0',  // to see which ones work best for you
+            limitMax: false,   
+            limitMin: true,     
+            colorStart: '#6FADCF',  
+            colorStop: '#8FC0DA',   
+            strokeColor: '#E0E0E0',  
             generateGradient: true,
-            highDpiSupport: true,     // High resolution support
+            highDpiSupport: true,    
+            staticZones: [
+                {strokeStyle: "#F03E3E", min: 170, max: 200}, // Red from 100 to 130
+                {strokeStyle: "#FFDD00", min: 100, max: 170}, // Yellow
+                {strokeStyle: "#444bf8", min: 0, max: 100}, 
+             ],
             
             };
-        var target = document.getElementById('gCD'); // your canvas element
-        gaugeCD= new Gauge(target).setOptions(opts); // create sexy gauge!
-        gaugeCD.maxValue = 200; // set max gauge value
-        gaugeCD.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-        gaugeCD.animationSpeed = 140; // set animation speed (32 is default value)
+        var target = document.getElementById('gCD'); 
+        gaugeCD= new Gauge(target).setOptions(opts); 
+        gaugeCD.maxValue = 200; 
+        gaugeCD.setMinValue(0);  
+        gaugeCD.animationSpeed = 90; 
         gaugeCD.setTextField(document.getElementById('gauge-valueCD'),1);
-        gaugeCD.set(0); // set actual value
+        gaugeCD.set(0); 
     }   
 
     function drawGaugeKM(){
         var opts = {
-            angle: -0.33, // The span of the gauge arc
-            lineWidth: 0.24, // The line thickness
-            radiusScale: 1, // Relative radius
+            angle: -0.33, 
+            lineWidth: 0.24, 
+            radiusScale: 1, 
             pointer: {
-              length: 0.6, // // Relative to gauge radius
-              strokeWidth: 0.035, // The thickness
-              color: '#000000' // Fill color
+              length: 0.6, 
+              strokeWidth: 0.035, 
+              color: '#000000' 
             },
-            limitMax: false,     // If false, max value increases automatically if value > maxValue
-            limitMin: false,     // If true, the min value of the gauge will be fixed
-            colorStart: '#6FADCF',   // Colors
-            colorStop: '#8FC0DA',    // just experiment with them
-            strokeColor: '#E0E0E0',  // to see which ones work best for you
+            limitMax: false,  
+            limitMin: false,   
+            colorStart: '#00ed96',   
+            colorStop: '#00ed96',    
+            strokeColor: 'white',  
             generateGradient: true,
-            highDpiSupport: true,     // High resolution support
+            highDpiSupport: true,
+            renderTicks: {
+                divisions: 5,
+                divWidth: 1.1,
+                divLength: 0.7,
+                divColor: "#333333",
+                subDivisions: 3,
+                subLength: 0.5,
+                subWidth: 0.6,
+                subColor: "#666666"
+            }
             
           };
         var target = document.getElementById('gKM'); // your canvas element
@@ -97,12 +113,12 @@
             type: 'GET',
             success: function(st) {
                 const TS = st.message_back.map(item =>{ 
-                    cv=convertTimeStamp(item.TS)
+                    cv=convertTimeStamp(item.VALUE.ts)
                 return cv;
                 }).reverse();
-                const SPEED = st.message_back.map(item => item.VALUE.speed).reverse();
-                const WATT = st.message_back.map(item => item.VALUE.watt).reverse();
-                resolve({ts:TS,speed:SPEED,watt:WATT})
+                const SPEED = st.message_back.map(item => item.VALUE.speed?parseFloat(item.VALUE.speed.toFixed(2)):0).reverse();
+                const CAD = st.message_back.map(item => item.VALUE.cadence?parseFloat(item.VALUE.cadence.toFixed(2)):0).reverse();
+                resolve({ts:TS,speed:SPEED,cadence:CAD})
             }
           });
         }) 
@@ -116,21 +132,21 @@
     }
     
     async function addToChart(ts,speed,cadence){
-        if(chart){
-            chart.data.labels.push(ts)
-            chart.data.datasets[0].data.push(speed)
-            chart.data.datasets[1].data.push(cadence)
-            chart.update();
+        if(chartLive){
+            chartLive.data.labels.push(ts)
+            chartLive.data.datasets[0].data.push(speed)
+            chartLive.data.datasets[1].data.push(cadence)
+            chartLive.update();
         }
     }
 
     async function updateChart(){
-        if(chart){
+        if(chartSnow){
             let res=await getRawValues()
-            chart.data.labels=res.ts
-            chart.data.datasets[0].data=res.speed
-            chart.data.datasets[1].data=res.watt
-            chart.update();
+            chartSnow.data.labels=res.ts
+            chartSnow.data.datasets[0].data=res.speed
+            chartSnow.data.datasets[1].data=res.cadence
+            chartSnow.update();
         }
     }
 
@@ -151,9 +167,10 @@
     }
     
     function startSaverTimer(val){
-        if(saver)
+        if(saver){
           clearInterval(saver)
           saver=null
+        }
         saver=setInterval( ()=>{
           if(saverVal==saverRef){
             clearInterval(refresh_timer);
@@ -198,17 +215,18 @@
         return `${hours}h${minutes}mn${seconds}s`
     }
 
-    async function drawChart(){
-        let res=await getRawValues()
-        chartClass = '.js-area-chart',
+    async function drawChart(className){
+        chartClass = className,
         data = {
-            labels: res.ts,
+            labels: [],
             datasets: [{
-                data: res.speed,
+                yAxisID:'SP',
+                data: [],
                 borderColor: 'rgba(0, 237, 150, 1)',
                 backgroundColor: 'rgba(0, 237, 150, .1)',
                 }, {
-                data: res.watt,
+                yAxisID:'CAD',
+                data: [],
                 borderColor: 'rgba(68, 75, 248, 1)',
                 backgroundColor: 'rgba(68, 75, 248, .1)',
             }]
@@ -261,29 +279,49 @@
                     }
                 }],
                 yAxes: [{
+                    id: 'CAD',
+                    type: 'linear',
+                    position: 'right',
                     gridLines: {
-                    borderDash: [8, 8],
-                    color: '#eaf2f9',
-                    drawBorder: false,
-                    drawTicks: false,
-                    zeroLineColor: 'transparent'
+                        borderDash: [8, 8],
+                        color: '#eaf2f9',
+                        drawBorder: false,
+                        drawTicks: false,
+                        zeroLineColor: 'transparent'
                     },
                     ticks: {
-                    min: 0,
-                    max: 200,
-                    display: false,
-                    padding: 0
+                        min: 0,
+                        max: 200,
+                        display: true,
+                        padding: 0
+                    }
+                },
+                {
+                    id: 'SP',
+                    type: 'linear',
+                    position: 'left',
+                    gridLines: {
+                        borderDash: [8, 8],
+                        color: '#eaf2f9',
+                        drawBorder: false,
+                        drawTicks: false,
+                        zeroLineColor: 'transparent'
+                    },
+                    ticks: {
+                        min: 0,
+                        max: 80,
+                        display: true,
+                        padding: 1
                     }
                 }]
             }
       };
-    $(chartClass).each(function (i, el) {
-      chart = new Chart(el, {
-        type: 'line',
-        data: data,
-        options: options
-      });
-    });
+    var ch = new Chart($(chartClass), {
+            type: 'line',
+            data: data,
+            options: options
+        });
+    return ch
     }
 
     function initSocket(){
@@ -291,40 +329,37 @@
         socket.on('connect_error',e=>console.log('Ant feeder Docker container is either not reachable, faulty or simply not started :-)'))
         socket.on('data', data => {
             if(typeof(data.speed)!='undefined'){
-                inMotion=data.move
-                if(inMotion==true){
-                    let sp=parseFloat(data.speed.toFixed(2));
-                    gaugeKM.set(sp);
-                    lastSpeed=sp;
-                }else{
-                    gaugeKM.set(0);
-                    lastSpeed=0;
-                }
+                activateRefresh();
+                let sp=parseFloat(data.speed.toFixed(2));
+                gaugeKM.set(sp);
+                lastSpeed=sp;
             }
             if(typeof(data.cadence)!='undefined'){
                 let cad=parseFloat(data.cadence.toFixed(2))
                 gaugeCD.set(cad)
                 lastCadence=cad
-                if(lastevent==data.lastevent){
-                    gaugeCD.set(0);
-                    lastCadence=0
-                }
-                lastevent=data.lastevent;
             }
-            if(inMotion)
-                addToChart(convertTimeStamp(data.ts),lastSpeed,lastCadence)
+            addToChart(convertTimeStamp(data.ts),lastSpeed,lastCadence)
           })
     }
+
+    function activateRefresh(){
+        let val=$('#refresh_rate').val()
+        if(refresh_state==false){
+            startRefreshTimer(parseInt(val));
+            startSaverTimer(parseInt(val));
+            toggleRefreshIco(true)
+        }
+    }
+
     async function init(){
         console.log('started');
         $("#loader").hide()
         $('[data-toggle="tooltip"]').tooltip()
-        if(refresh_state==false){
-            startRefreshTimer(parseInt($("#refresh_rate").val()));
-            startSaverTimer(parseInt($("#refresh_rate").val()));
-        }
         toggleRefreshIco(refresh_state);
-        drawChart();
+        chartLive=await drawChart('.js-area-chart');
+        chartSnow=await drawChart('.js-area-chart-snow');
+        updateChart();
         drawGaugeKM();
         drawGaugeDS();
         drawGaugeCD();
