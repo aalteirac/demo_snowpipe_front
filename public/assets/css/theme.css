@@ -69,7 +69,7 @@
   display: block;
   text-align: center;
   margin-top: 1.3rem;
-  font-size: 6vh!important;
+  font-size: 3vw!important;
 }
 
 #loader {
@@ -589,6 +589,7 @@ pre code {
   margin-right: auto;
   margin-left: auto;
 }
+
 
 @media (min-width: 576px) {
   .container {
@@ -15622,7 +15623,7 @@ body.side-nav-on-action .u-content {
   position: absolute;
   top: -3.25rem;
   width: 100%;
-  height: calc(100% + 3.25rem);
+  height: 100%;
   font-size: 0.875rem;
 }
 

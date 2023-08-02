@@ -1,4 +1,3 @@
-
 var express = require('express');
 const si = require('systeminformation');
 var path = require('path');
@@ -9,6 +8,20 @@ require('dotenv').config();
 var snowflake = require('snowflake-sdk');
 var crypto = require('crypto');
 var fs = require('fs');
+
+//KILL PIGPIOD DAEMON
+try {
+  var filePath = '/var/run/pigpio.pid'; 
+  fs.unlinkSync(filePath);
+} catch (error) {
+  console.log('No Daemon running... All good')
+}
+
+try {
+  var gpio = require('./gpio');
+} catch (error) {
+  console.log('on non GPIO device...')
+}
 const config = require('config');
 snowflake.configure({logLevel : 'ERROR'});
 
@@ -77,7 +90,7 @@ async function getRawValues(){
             console.log(e)
           });
     var statement =connection.execute({
-      sqlText: `select * from snowpipe_streaming.dev.fromsdk where TS> dateadd(minute,-5,current_timestamp()) order by TS desc;`,
+      sqlText: `select * from snowpipe_streaming.dev.fromsdk where TS> dateadd(second,-20,current_timestamp()) order by TS desc;`,
       complete: function(err, stmt, rows) {
         if (err) {
           console.error('Failed to execute statement due to the following error: ' + err.message);
@@ -124,6 +137,11 @@ app.get('/rawcount', async function (req, res) {
   var ret="";
   ret=await getRawCount();
   res.send({message_back:ret,info:await getTemp()})
+})  
+
+app.get('/runcycle', async function (req, res) {
+  gpio.run()
+  res.send({message_back:'ok'})
 })  
 
 app.get('/rawval', async function (req, res) {

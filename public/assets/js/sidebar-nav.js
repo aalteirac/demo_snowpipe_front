@@ -122,7 +122,11 @@
         } else if ($body.hasClass('side-nav-on-action desktop-mode')) {
           openEffect(target, closedItems);
         }
+        
       }
+      // setTimeout(() => {
+      //   closeEffect(target, closedItems);
+      // }, 1000);
     }).resize();
   });
 })(jQuery);

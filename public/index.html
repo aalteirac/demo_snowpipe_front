@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 		<link rel="stylesheet" href="assets/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
 		<link rel="stylesheet" href="assets/css/theme.css">
+		<meta name="viewport" content="width=device-width">
 	</head>
 	<body>
 		<header class="u-header">
@@ -48,7 +49,7 @@
 				</div>
 			</div>
 			<div class="u-header-section pop-refresh" data-toggle="popover">
-				<span class="position-relative" style="cursor: pointer;" title="Auto-Refresh" data-toggle="tooltip" data-delay='{"show":"1000", "hide":"2000"}'>
+				<span class="position-relative" style="cursor: pointer;" title="Start a Run!" data-toggle="tooltip" id ="runtp" data-delay='{"show":"100", "hide":"200"}'>
 					<span class="fa fa-retweet u-header-invoker__icon"></span>
 					<span id="refresh_ico" class="u-indicator u-indicator-top-right u-indicator-xxs bg-success"></span>
 				</span>
@@ -57,7 +58,7 @@
 
 		<main class="u-main">
 
-			<aside id="sidebar" class="u-sidebar">
+			<aside id="sidebar" class="u-sidebar ">
 				<div class="u-sidebar-inner">
 					<header class="u-sidebar-header">
 						<a class="u-sidebar-logo" href="index.html">
@@ -66,13 +67,13 @@
 					<nav class="u-sidebar-nav">
 						<ul class="u-sidebar-nav-menu u-sidebar-nav-menu--top-level">
 							<li class="u-sidebar-nav-menu__item">
-								<a class="u-sidebar-nav-menu__link active" href="javascript: void(0)" onclick="  $('#the_page').load('dashboard.html'); ">
+								<a class="u-sidebar-nav-menu__link active" href="javascript: void(0)" onclick=" $('#the_page').load('dashboard.html'); ">
 									<span class="fa fa-chart-line u-sidebar-nav-menu__item-icon"></span>
 									<span class="u-sidebar-nav-menu__item-title">Dashboard</span>
 								</a>
 							</li>
 
-							<li class="u-sidebar-nav-menu__item">
+							<!-- <li class="u-sidebar-nav-menu__item">
 								<a class="u-sidebar-nav-menu__link" href=""
 								   data-target="#menuItemUIBase">
 									<span class="fa fa-gear u-sidebar-nav-menu__item-icon"></span>
@@ -88,14 +89,14 @@
 										</a>
 									</li>
 								</ul>
-							</li>
+							</li> -->
 
 							<li class="u-sidebar-nav-menu__divider"></li>
 
 							<li class="u-sidebar-nav-menu__item">
-								<a class="u-sidebar-nav-menu__link" href="" target="_blank">
+								<a class="u-sidebar-nav-menu__link" href="javascript: void(0)" onclick=" $('#the_page').load('other.html'); ">
 									<span class="fa fa-file-lines u-sidebar-nav-menu__item-icon"></span>
-									<span class="u-sidebar-nav-menu__item-title">Documentation</span>
+									<span class="u-sidebar-nav-menu__item-title">What's this thing?</span>
 								</a>
 							</li>
 

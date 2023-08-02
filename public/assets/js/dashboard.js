@@ -1,3 +1,4 @@
+
 (function ($) {
     var refresh_timer;
     var saverVal=0;
@@ -12,6 +13,11 @@
     var lastSpeed=0;
     var lastCadence=0;
     var inMotion=false;
+    var timeSnow={};
+    var timeLive={};
+    var latency=[0];
+    var avgLatency=0;
+    var refreshRate=1;
 
     function drawGaugeDS(){
     
@@ -94,6 +100,18 @@
         return formattedDate;
     }
 
+    function runCycle(){
+        return new Promise((resolve,reject)=>{
+          $.ajax({
+            url: "/runcycle",
+            type: 'GET',
+            success: function(res) {
+                resolve(res)
+            }
+          });
+        }) 
+    }
+
     function getRawCount(){
         return new Promise((resolve,reject)=>{
           $.ajax({
@@ -118,7 +136,8 @@
                 }).reverse();
                 const SPEED = st.message_back.map(item => item.VALUE.speed?parseFloat(item.VALUE.speed.toFixed(2)):0).reverse();
                 const CAD = st.message_back.map(item => item.VALUE.cadence?parseFloat(item.VALUE.cadence.toFixed(2)):0).reverse();
-                resolve({ts:TS,speed:SPEED,cadence:CAD})
+                const TEMP= st.message_back.map(item => parseFloat(item.VALUE.host_info.cpu_temperature.replace(/[^0-9.]/g, ''))).reverse()
+                resolve({ts:TS,speed:SPEED,cadence:CAD,cpu_temp:TEMP})
             }
           });
         }) 
@@ -134,18 +153,43 @@
     async function addToChart(ts,speed,cadence){
         if(chartLive){
             chartLive.data.labels.push(ts)
+            timeLive[ts]=new Date().getTime();
             chartLive.data.datasets[0].data.push(speed)
-            chartLive.data.datasets[1].data.push(cadence)
+            // chartLive.data.datasets[1].data.push(cadence)
             chartLive.update();
         }
     }
 
     async function updateChart(){
         if(chartSnow){
-            let res=await getRawValues()
-            chartSnow.data.labels=res.ts
-            chartSnow.data.datasets[0].data=res.speed
-            chartSnow.data.datasets[1].data=res.cadence
+            delta=0;
+            let res=await getRawValues();
+            chartSnow.data.labels=res.ts;
+            if(typeof(res.ts)!='undefined' && res.ts.length>0){
+                var lastTickNb=Object.values(timeSnow).length;
+                // console.log("before",lastTickNb,res.ts.length-1)
+                for (let index = lastTickNb; index < res.ts.length; index++) {
+                    const element = res.ts[index];
+                    timeSnow[element]=new Date().getTime();
+                    delta=(timeSnow[element]-timeLive[element])/1000
+                    if(!isNaN(delta)){
+                        latency.push(delta);
+                        var tot=0;
+                        latency.forEach(element => {
+                            tot=tot+element;
+                        });
+                        avgLatency=tot/latency.length;
+                        $("#latavg").text(parseFloat(avgLatency).toFixed(3)+'s');
+                    }  
+                }
+                // console.log("after",lastTickNb,res.ts.length)
+                // console.log(timeSnow,timeLive,latency,delta)
+            }
+            chartLive.data.datasets[1].data=latency;
+            chartLive.update();
+            chartSnow.data.datasets[0].data=res.speed     
+            if(res.cpu_temp)
+                chartSnow.data.datasets[2].data=res.cpu_temp
             chartSnow.update();
         }
     }
@@ -173,18 +217,21 @@
         }
         saver=setInterval( ()=>{
           if(saverVal==saverRef){
+            timeSnow={};
+            timeLive={};
+            latency=[0]
             clearInterval(refresh_timer);
             clearInterval(saver);
             refresh_timer=null;
             saver=null;
             refresh_state=false;
-            var tm=toHoursAndMinutes( parseInt($("#refresh_rate").val())*10)
-            var txt=`Saving money, the data hasn't changed for ${tm}<br>Stopping Auto-refresh...<br>Auto-refresh stopped`
+            var tm=toHoursAndMinutes(refreshRate*10)
+            var txt=`Run ended...<br>Auto-refresh stopped...`
             notifStopRefresh(txt)
           } else{
             saverRef=saverVal;
           }
-        },parseInt(val)*10000)
+        },val*6000)
     } 
 
     function toggleRefreshIco(on=false){
@@ -204,6 +251,9 @@
         $('.pop-refresh').popover({html:true,placement:'top',title: 'INFORMATION' + close, content: text, trigger:'manual'})
         $('.pop-refresh').attr("data-content", text)
         $('.pop-refresh').popover('show')
+        setTimeout(() => {
+            $('.pop-refresh').popover('hide')
+        }, 5000);
     }
       
     function toHoursAndMinutes(sec) {
@@ -215,21 +265,27 @@
         return `${hours}h${minutes}mn${seconds}s`
     }
 
-    async function drawChart(className){
+    async function drawChart(className,temp=false){
         chartClass = className,
         data = {
             labels: [],
             datasets: [{
-                yAxisID:'SP',
-                data: [],
-                borderColor: 'rgba(0, 237, 150, 1)',
-                backgroundColor: 'rgba(0, 237, 150, .1)',
+                    yAxisID:'SP',
+                    data: [],
+                    borderColor: 'rgba(0, 237, 150, 1)',
+                    backgroundColor: 'rgba(0, 237, 150, .1)',
                 }, {
-                yAxisID:'CAD',
-                data: [],
-                borderColor: 'rgba(68, 75, 248, 1)',
-                backgroundColor: 'rgba(68, 75, 248, .1)',
-            }]
+                    yAxisID:'CAD',
+                    data: [],
+                    borderColor: 'rgba(68, 75, 248, 1)',
+                    backgroundColor: 'rgba(68, 75, 248, .1)',
+                },{
+                    yAxisID:'TP',
+                    data: [],
+                    borderColor: '#ff0303',
+                    backgroundColor: 'transparent',
+                },
+            ]
         },
         options = {
             responsive: true,
@@ -248,7 +304,15 @@
                 displayColors: false,
                 callbacks: {
                     label: function (tooltipItems, data) {
-                        let unit=tooltipItems.datasetIndex==0?" KM/H":" WATTS"
+                        let unit=" KM/H";
+                        switch (tooltipItems.datasetIndex) {
+                            case 1:
+                                unit=" Sec";
+                                break;
+                            case 2:
+                                unit=" ° Celsius"
+                                break;
+                        }
                         return data.datasets[tooltipItems.datasetIndex].data[tooltipItems.index] + unit;
                     }
                 },
@@ -282,7 +346,9 @@
                     id: 'CAD',
                     type: 'linear',
                     position: 'right',
+                    display:!temp,
                     gridLines: {
+                        display: false,
                         borderDash: [8, 8],
                         color: '#eaf2f9',
                         drawBorder: false,
@@ -291,7 +357,7 @@
                     },
                     ticks: {
                         min: 0,
-                        max: 200,
+                        suggestedMax: 4,
                         display: true,
                         padding: 0
                     }
@@ -301,6 +367,7 @@
                     type: 'linear',
                     position: 'left',
                     gridLines: {
+                        display: false,
                         borderDash: [8, 8],
                         color: '#eaf2f9',
                         drawBorder: false,
@@ -309,11 +376,32 @@
                     },
                     ticks: {
                         min: 0,
-                        max: 80,
+                        suggestedMax: 10,
                         display: true,
                         padding: 1
                     }
-                }]
+                },
+                {
+                    id: 'TP',
+                    type: 'linear',
+                    position: 'right',
+                    display:temp,
+                    gridLines: {
+                        display: false,
+                        borderDash: [8, 8],
+                        color: '#ff0303',
+                        drawBorder: false,
+                        drawTicks: false,
+                        zeroLineColor: 'transparent'
+                    },
+                    ticks: {
+                        suggestedMin: 50,
+                        suggestedMax: 75,
+                        display: true,
+                        padding: 1
+                    }
+                }
+                ]
             }
       };
     var ch = new Chart($(chartClass), {
@@ -325,7 +413,7 @@
     }
 
     function initSocket(){
-        const socket = io("http://10.0.0.11:4321");
+        const socket = io("http://stream.alteirac.com:4321");
         socket.on('connect_error',e=>console.log('Ant feeder Docker container is either not reachable, faulty or simply not started :-)'))
         socket.on('data', data => {
             if(typeof(data.speed)!='undefined'){
@@ -336,18 +424,22 @@
             }
             if(typeof(data.cadence)!='undefined'){
                 let cad=parseFloat(data.cadence.toFixed(2))
-                gaugeCD.set(cad)
+                // gaugeCD.set(cad)
                 lastCadence=cad
             }
-            addToChart(convertTimeStamp(data.ts),lastSpeed,lastCadence)
+            addToChart(convertTimeStamp(Date.now()),lastSpeed,lastCadence)
           })
+        
     }
 
     function activateRefresh(){
-        let val=$('#refresh_rate').val()
+        let val=refreshRate;
         if(refresh_state==false){
-            startRefreshTimer(parseInt(val));
-            startSaverTimer(parseInt(val));
+            chartLive.data.datasets[0].data=[]
+            chartLive.data.datasets[1].data=[]
+            chartLive.data.labels=[]
+            startRefreshTimer(val);
+            startSaverTimer(val);
             toggleRefreshIco(true)
         }
     }
@@ -358,43 +450,41 @@
         $('[data-toggle="tooltip"]').tooltip()
         toggleRefreshIco(refresh_state);
         chartLive=await drawChart('.js-area-chart');
-        chartSnow=await drawChart('.js-area-chart-snow');
+        chartSnow=await drawChart('.js-area-chart-snow',true);
         updateChart();
         drawGaugeKM();
         drawGaugeDS();
-        drawGaugeCD();
+        // drawGaugeCD();
         initSocket();
+        document.getElementById("runtp").style.visibility = 'visible';
     }
 
-    $("#refresh_rate").on('input', function () {
-        window.refresh_timer_delay=parseInt($(this).val());
-        $('#rangeval').html(window.refresh_timer_delay)
-        startRefreshTimer(parseInt($(this).val()));
-        startSaverTimer(parseInt($(this).val()));
-        toggleRefreshIco(refresh_state);
-    })
 
-    $("#refresh_ico").parent().on('click',function(){
+    $("#refresh_ico").parent().on('click',async function(){
         if (refresh_state==true){
-            refresh_state=false;
-            if(refresh_timer)
-                clearInterval(refresh_timer);
-                refresh_timer=null
-             if(saver)    
-                clearInterval(saver);
-                saver=null;
+            console.log('already started')
+            // toggleRefreshIco(false);
+            // refresh_state=false;
+            // if(refresh_timer)
+            //     clearInterval(refresh_timer);
+            //     refresh_timer=null
+            //  if(saver)    
+            //     clearInterval(saver);
+            //     saver=null;
         }
         else{
-            startRefreshTimer(parseInt($("#refresh_rate").val())); 
-            startSaverTimer(parseInt($("#refresh_rate").val())); 
+            console.log('starting')
+            chartLive.data.datasets[0].data=[]
+            chartLive.data.datasets[1].data=[]
+            chartLive.data.labels=[]
+            refresh_state=true;
+            // startRefreshTimer(refreshRate); 
+            // startSaverTimer(refreshRate); 
+            toggleRefreshIco(true);
+            await runCycle();
         }
-        toggleRefreshIco(refresh_state);
     })
 
-    if(window.refresh_timer_delay){
-        $("#refresh_rate").val(window.refresh_timer_delay);
-        $('#rangeval').html(window.refresh_timer_delay)
-    }
 
     updateRawCount().then((v)=>(saverRef=v))
     init();

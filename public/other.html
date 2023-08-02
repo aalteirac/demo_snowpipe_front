@@ -1,1 +1,28 @@
-Hello !
+
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <p>Let me explain the way this system works. First you need to understand it's a perfect example of useless machine...</p>
+                <p>Nevertheless, it also demonstrates few interesting mechanisms:
+                    <li>Raspberry GPIO control in Docker</li>
+                    <li>Raspberry USB ANT+ protocol in Docker</li>
+                    <li>Snowpipe Streaming SDK</li>
+                </p>
+                <p>Clicking on the right top button launch a service on the Raspberry and triggers the servo motor (GPIO), it shakes the Octopus on the Lego stand. 
+                The lego stand has a speed sensor and send the signal through ANT+ wireless protocol to the same Raspberry (USB ANT dongle). The speed information is sent live to the website and asynchromoulsly streamed to Snowflake with Snowpipe Streaming SDK (Java).
+                The website queries Snowflake to retrieve the speed, display the data on the bottom line chart and calculates the latency.</p>
+            </div>
+        </div>
+    </div>
+</div>    
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+            <img src="assets/img/doc.png" width="100%"/ height="100%">
+            </div>
+        </div>
+    </div>
+</div>
